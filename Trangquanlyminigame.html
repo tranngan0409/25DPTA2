@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý - Mini Game 25DPTA2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #dc2626, #ea580c, #fbbf24, #ea580c, #dc2626);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 4s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .sidebar-item {
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .sidebar-item:hover {
+            background: rgba(220, 38, 38, 0.1);
+        }
+        
+        .sidebar-item.active {
+            background: rgba(220, 38, 38, 0.2);
+            border-left: 4px solid #dc2626;
+        }
+        
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .participant-row:hover {
+            background: #fef2f2;
+        }
+        
+        .notification-dot {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    
+    <!-- Admin Login Modal -->
+    <div id="login-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-2xl p-8 max-w-md w-full mx-4">
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 bg-gradient-to-r from-red-600 to-red-800 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-user-shield text-white text-2xl"></i>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800">Đăng nhập quản lý</h2>
+                <p class="text-gray-600 mt-2">Vui lòng nhập mật khẩu để truy cập trang quản lý</p>
+            </div>
+            
+            <div class="mb-6">
+                <label class="block text-gray-700 font-medium mb-2" for="admin-password">Mật khẩu quản lý</label>
+                <input type="password" id="admin-password" 
+                       class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                       placeholder="Nhập mật khẩu">
+                <p class="text-xs text-gray-500 mt-2">Mật khẩu mặc định: 25dpta2admin</p>
+            </div>
+            
+            <div class="flex space-x-4">
+                <button id="login-btn" class="flex-1 bg-gradient-to-r from-red-600 to-red-700 text-white py-3 rounded-lg font-bold hover:from-red-700 hover:to-red-800 transition duration-300">
+                    Đăng nhập
+                </button>
+                <button id="cancel-btn" class="flex-1 border-2 border-gray-300 text-gray-700 py-3 rounded-lg font-bold hover:bg-gray-50 transition duration-300">
+                    Hủy
+                </button>
+            </div>
+            
+            <div id="login-error" class="mt-4 p-3 bg-red-50 text-red-700 rounded-lg hidden">
+                <i class="fas fa-exclamation-circle mr-2"></i>
+                <span id="error-message">Mật khẩu không chính xác!</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Admin Dashboard -->
+    <div id="admin-dashboard" class="hidden">
+        <div class="flex h-screen">
+            <!-- Sidebar -->
+            <div class="w-64 bg-white shadow-lg">
+                <div class="p-6 border-b">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-r from-red-600 to-red-800 rounded-full flex items-center justify-center">
+                            <i class="fas fa-dragon text-white"></i>
+                        </div>
+                        <div>
+                            <h1 class="font-bold text-gray-800">25DPTA2 Admin</h1>
+                            <p class="text-xs text-gray-500">Quản lý Mini Game</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="p-4">
+                    <div class="sidebar-item active p-3 rounded-lg mb-2 cursor-pointer" data-section="dashboard">
+                        <i class="fas fa-tachometer-alt mr-3 text-red-600"></i>
+                        <span class="font-medium">Tổng quan</span>
+                    </div>
+                    
+                    <div class="sidebar-item p-3 rounded-lg mb-2 cursor-pointer" data-section="participants">
+                        <i class="fas fa-users mr-3 text-red-600"></i>
+                        <span class="font-medium">Người tham gia</span>
+                        <span id="participant-badge" class="bg-red-100 text-red-800 text-xs font-bold px-2 py-1 rounded-full ml-auto float-right">0</span>
+                    </div>
+                    
+                    <div class="sidebar-item p-3 rounded-lg mb-2 cursor-pointer" data-section="notifications">
+                        <i class="fas fa-bell mr-3 text-red-600"></i>
+                        <span class="font-medium">Thông báo</span>
+                        <span id="notification-badge" class="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full ml-auto float-right notification-dot hidden">0</span>
+                    </div>
+                    
+                    <div class="sidebar-item p-3 rounded-lg mb-2 cursor-pointer" data-section="settings">
+                        <i class="fas fa-cog mr-3 text-red-600"></i>
+                        <span class="font-medium">Cài đặt</span>
+                    </div>
+                </div>
+                
+                <div class="absolute bottom-0 w-64 p-4 border-t">
+                    <button id="logout-btn" class="w-full p-3 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium text-gray-700 transition duration-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Đăng xuất
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="flex-1 overflow-y-auto">
+                <!-- Header -->
+                <div class="bg-white shadow p-6">
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h2 id="section-title" class="text-2xl font-bold text-gray-800">Tổng quan hệ thống</h2>
+                            <p id="section-subtitle" class="text-gray-600">Thống kê và quản lý người tham gia Mini Game</p>
+                        </div>
+                        
+                        <div class="flex items-center space-x-4">
+                            <div class="text-right">
+                                <p class="text-sm text-gray-500">Phiên bản</p>
+                                <p class="font-bold">1.0.0</p>
+                            </div>
+                            <div class="w-10 h-10 bg-gradient-to-r from-red-600 to-red-800 rounded-full flex items-center justify-center">
+                                <i class="fas fa-user-shield text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Dashboard Content -->
+                <div class="p-6">
+                    <!-- Dashboard Section -->
+                    <div id="dashboard-section">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                            <div class="stat-card bg-white p-6 rounded-xl shadow">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Tổng số người đăng ký</p>
+                                        <p class="text-3xl font-bold mt-2" id="total-participants">0</p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-users text-red-600 text-xl"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-4 pt-4 border-t">
+                                    <p class="text-xs text-gray-500">+<span id="today-count">0</span> hôm nay</p>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card bg-white p-6 rounded-xl shadow">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Số vé đã phát</p>
+                                        <p class="text-3xl font-bold mt-2" id="total-tickets">0</p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-ticket-alt text-green-600 text-xl"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-4 pt-4 border-t">
+                                    <p class="text-xs text-gray-500">Vé từ 1000-9999</p>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card bg-white p-6 rounded-xl shadow">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Số lớp tham gia</p>
+                                        <p class="text-3xl font-bold mt-2" id="total-classes">0</p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-graduation-cap text-blue-600 text-xl"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-4 pt-4 border-t">
+                                    <p class="text-xs text-gray-500">Đa dạng lớp học</p>
+                                </div>
+                            </div>
+                            
+                            <div class="stat-card bg-white p-6 rounded-xl shadow">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm text-gray-500">Tỷ lệ tham gia</p>
+                                        <p class="text-3xl font-bold mt-2" id="participation-rate">0%</p>
+                                    </div>
+                                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                                        <i class="fas fa-chart-line text-yellow-600 text-xl"></i>
+                                    </div>
+                                </div>
+                                <div class="mt-4 pt-4 border-t">
+                                    <p class="text-xs text-gray-500">Mục tiêu: 100 người</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            <div class="bg-white p-6 rounded-xl shadow">
+                                <h3 class="font-bold text-lg mb-4">Thống kê theo thời gian</h3>
+                                <div class="h-64">
+                                    <canvas id="registration-chart"></canvas>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white p-6 rounded-xl shadow">
+                                <h3 class="font-bold text-lg mb-4">Hoạt động gần đây</h3>
+                                <div id="recent-activity" class="space-y-4 max-h-64 overflow-y-auto">
+                                    <!-- Recent activity will be loaded here -->
+                                    <div class="text-center py-8 text-gray-500">
+                                        <i class="fas fa-history text-3xl mb-2"></i>
+                                        <p>Đang tải hoạt động...</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 bg-white p-6 rounded-xl shadow">
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="font-bold text-lg">10 người đăng ký gần nhất</h3>
+                                <button id="view-all-participants" class="text-red-600 font-medium hover:text-red-800">
+                                    Xem tất cả →
+                                </button>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="bg-gray-50">
+                                            <th class="text-left p-3 font-medium">STT</th>
+                                            <th class="text-left p-3 font-medium">Họ tên</th>
+                                            <th class="text-left p-3 font-medium">Số vé</th>
+                                            <th class="text-left p-3 font-medium">Lớp</th>
+                                            <th class="text-left p-3 font-medium">Thời gian</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-participants">
+                                        <!-- Recent participants will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Participants Section -->
+                    <div id="participants-section" class="hidden">
+                        <div class="bg-white rounded-xl shadow overflow-hidden">
+                            <div class="p-6 border-b">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h3 class="font-bold text-xl">Danh sách người tham gia</h3>
+                                        <p class="text-gray-600">Tất cả người đã đăng ký Mini Game</p>
+                                    </div>
+                                    <div class="flex space-x-4">
+                                        <button id="export-btn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition duration-300">
+                                            <i class="fas fa-download mr-2"></i> Xuất Excel
+                                        </button>
+                                        <button id="refresh-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg font-medium transition duration-300">
+                                            <i class="fas fa-sync-alt mr-2"></i> Làm mới
+                                        </button>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 flex flex-wrap gap-4">
+                                    <div class="flex-1 min-w-[200px]">
+                                        <input type="text" id="search-participants" 
+                                               class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                                               placeholder="Tìm kiếm theo tên, số vé, lớp...">
+                                    </div>
+                                    <select id="filter-class" class="px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                                        <option value="">Tất cả lớp</option>
+                                        <option value="25DPTA2">25DPTA2</option>
+                                        <!-- Other classes will be added dynamically -->
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead>
+                                        <tr class="bg-gray-50">
+                                            <th class="text-left p-3 font-medium">STT</th>
+                                            <th class="text-left p-3 font-medium">Họ tên</th>
+                                            <th class="text-left p-3 font-medium">Email</th>
+                                            <th class="text-left p-3 font-medium">SĐT</th>
+                                            <th class="text-left p-3 font-medium">Số vé</th>
+                                            <th class="text-left p-3 font-medium">Lớp</th>
+                                            <th class="text-left p-3 font-medium">Ngày đăng ký</th>
+                                            <th class="text-left p-3 font-medium">Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="all-participants">
+                                        <!-- All participants will be loaded here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="p-4 border-t">
+                                <div class="flex justify-between items-center">
+                                    <p class="text-gray-600" id="participant-count">Hiển thị 0 người tham gia</p>
+                                    <div class="flex space-x-2">
+                                        <button id="prev-page" class="px-3 py-1 border rounded-lg hover:bg-gray-100">&lt;</button>
+                                        <span id="page-info" class="px-3 py-1">Trang 1/1</span>
+                                        <button id="next-page" class="px-3 py-1 border rounded-lg hover:bg-gray-100">&gt;</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Notifications Section -->
+                    <div id="notifications-section" class="hidden">
+                        <div class="bg-white rounded-xl shadow overflow-hidden">
+                            <div class="p-6 border-b">
+                                <div class="flex justify-between items-center">
+                                    <div>
+                                        <h3 class="font-bold text-xl">Thông báo hệ thống</h3>
+                                        <p class="text-gray-600">Các hoạt động và sự kiện gần đây</p>
+                                    </div>
+                                    <div>
+                                        <button id="mark-all-read" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-4 py-2 rounded-lg font-medium transition duration-300">
+                                            <i class="fas fa-check-double mr-2"></i> Đánh dấu đã đọc
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div id="notifications-list" class="divide-y">
+                                <!-- Notifications will be loaded here -->
+                                <div class="p-6 text-center text-gray-500">
+                                    <i class="fas fa-bell-slash text-3xl mb-2"></i>
+                                    <p>Không có thông báo nào</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Settings Section -->
+                    <div id="settings-section" class="hidden">
+                        <div class="bg-white rounded-xl shadow p-6">
+                            <h3 class="font-bold text-xl mb-6">Cài đặt hệ thống</h3>
+                            
+                            <div class="space-y-6">
+                                <div class="border-b pb-6">
+                                    <h4 class="font-bold text-lg mb-4">Thông tin Mini Game</h4>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-gray-700 font-medium mb-2">Tên sự kiện</label>
+                                            <input type="text" value="Mini Game Quay Số Trúng Thưởng" 
+                                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-gray-700 font-medium mb-2">Ngày diễn ra</label>
+                                            <input type="text" value="27/12/2025" 
+                                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="border-b pb-6">
+                                    <h4 class="font-bold text-lg mb-4">Cài đặt quản lý</h4>
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-gray-700 font-medium mb-2">Mật khẩu quản lý</label>
+                                            <input type="password" placeholder="Nhập mật khẩu mới" 
+                                                   class="w-full md:w-1/2 px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500">
+                                            <p class="text-sm text-gray-500 mt-2">Để trống nếu không muốn thay đổi</p>
+                                        </div>
+                                        
+                                        <div class="flex items-center">
+                                            <input type="checkbox" id="enable-notifications" class="h-5 w-5 text-red-600 rounded focus:ring-red-500" checked>
+                                            <label for="enable-notifications" class="ml-2 text-gray-700">
+                                                Bật thông báo khi có người đăng ký mới
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="border-b pb-6">
+                                    <h4 class="font-bold text-lg mb-4">Quản lý dữ liệu</h4>
+                                    <div class="space-y-4">
+                                        <button id="backup-data" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-medium transition duration-300">
+                                            <i class="fas fa-save mr-2"></i> Sao lưu dữ liệu
+                                        </button>
+                                        <button id="reset-data" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg font-medium transition duration-300 ml-4">
+                                            <i class="fas fa-trash-alt mr-2"></i> Xóa toàn bộ dữ liệu
+                                        </button>
+                                    </div>
+                                    <p class="text-sm text-gray-500 mt-4">Cảnh báo: Xóa dữ liệu sẽ không thể khôi phục!</p>
+                                </div>
+                                
+                                <div>
+                                    <button id="save-settings" class="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-lg font-bold hover:from-red-700 hover:to-red-800 transition duration-300">
+                                        <i class="fas fa-save mr-2"></i> Lưu cài đặt
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Biến toàn cục
+        let participants = [];
+        let notifications = [];
+        let currentPage = 1;
+        const participantsPerPage = 10;
+        let chart = null;
+        
+        // Khởi tạo khi trang load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Kiểm tra nếu đã đăng nhập
+            checkLoginStatus();
+            
+            // Setup các event listeners
+            setupEventListeners();
+            
+            // Tải dữ liệu
+            loadData();
+        });
+        
+        // Kiểm tra trạng thái đăng nhập
+        function checkLoginStatus() {
+            const isLoggedIn = localStorage.getItem('25dpta2_admin_logged_in') === 'true';
+            
+            if (isLoggedIn) {
+                showAdminDashboard();
+            } else {
+                showLoginModal();
+            }
+        }
+        
+        // Hiển thị modal đăng nhập
+        function showLoginModal() {
+            document.getElementById('login-modal').classList.remove('hidden');
+            document.getElementById('admin-dashboard').classList.add('hidden');
+        }
+        
+        // Hiển thị dashboard admin
+        function showAdminDashboard() {
+            document.getElementById('login-modal').classList.add('hidden');
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+        }
+        
+        // Setup các event listeners
+        function setupEventListeners() {
+            // Login button
+            document.getElementById('login-btn').addEventListener('click', function() {
+                const password = document.getElementById('admin-password').value;
+                const defaultPassword = '25dpta2admin';
+                
+                if (password === defaultPassword) {
+                    // Đăng nhập thành công
+                    localStorage.setItem('25dpta2_admin_logged_in', 'true');
+                    showAdminDashboard();
+                    loadData();
+                } else {
+                    // Hiển thị lỗi
+                    document.getElementById('login-error').classList.remove('hidden');
+                }
+            });
+            
+            // Cancel button
+            document.getElementById('cancel-btn').addEventListener('click', function() {
+                // Quay lại trang chính
+                window.location.href = 'index.html';
+            });
+            
+            // Logout button
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                localStorage.removeItem('25dpta2_admin_logged_in');
+                showLoginModal();
+            });
+            
+            // Sidebar navigation
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all items
+                    document.querySelectorAll('.sidebar-item').forEach(i => {
+                        i.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Show the corresponding section
+                    const section = this.getAttribute('data-section');
+                    showSection(section);
+                });
+            });
+            
+            // View all participants button
+            document.getElementById('view-all-participants').addEventListener('click', function() {
+                showSection('participants');
+            });
+            
+            // Export button
+            document.getElementById('export-btn').addEventListener('click', exportToExcel);
+            
+            // Refresh button
+            document.getElementById('refresh-btn').addEventListener('click', loadData);
+            
+            // Search participants
+            document.getElementById('search-participants').addEventListener('input', filterParticipants);
+            
+            // Pagination
+            document.getElementById('prev-page').addEventListener('click', goToPrevPage);
+            document.getElementById('next-page').addEventListener('click', goToNextPage);
+            
+            // Mark all notifications as read
+            document.getElementById('mark-all-read').addEventListener('click', markAllNotificationsAsRead);
+            
+            // Save settings
+            document.getElementById('save-settings').addEventListener('click', saveSettings);
+            
+            // Backup data
+            document.getElementById('backup-data').addEventListener('click', backupData);
+            
+            // Reset data
+            document.getElementById('reset-data').addEventListener('click', function() {
+                if (confirm('Bạn có chắc chắn muốn xóa toàn bộ dữ liệu? Hành động này không thể hoàn tác!')) {
+                    resetData();
+                }
+            });
+        }
+        
+        // Hiển thị section tương ứng
+        function showSection(section) {
+            // Ẩn tất cả sections
+            document.getElementById('dashboard-section').classList.add('hidden');
+            document.getElementById('participants-section').classList.add('hidden');
+            document.getElementById('notifications-section').classList.add('hidden');
+            document.getElementById('settings-section').classList.add('hidden');
+            
+            // Hiển thị section được chọn
+            document.getElementById(section + '-section').classList.remove('hidden');
+            
+            // Cập nhật title
+            const titles = {
+                'dashboard': 'Tổng quan hệ thống',
+                'participants': 'Quản lý người tham gia',
+                'notifications': 'Thông báo hệ thống',
+                'settings': 'Cài đặt hệ thống'
+            };
+            
+            const subtitles = {
+                'dashboard': 'Thống kê và quản lý người tham gia Mini Game',
+                'participants': 'Tất cả người đã đăng ký Mini Game',
+                'notifications': 'Các hoạt động và sự kiện gần đây',
+                'settings': 'Cài đặt và tùy chỉnh hệ thống'
+            };
+            
+            document.getElementById('section-title').textContent = titles[section];
+            document.getElementById('section-subtitle').textContent = subtitles[section];
+            
+            // Load dữ liệu cho section nếu cần
+            if (section === 'participants') {
+                displayParticipants();
+            } else if (section === 'notifications') {
+                displayNotifications();
+            }
+        }
+        
+        // Tải dữ liệu
+        function loadData() {
+            // Tải participants từ localStorage
+            participants = JSON.parse(localStorage.getItem('25dpta2_participants')) || [];
+            
+            // Tải notifications từ localStorage
+            notifications = JSON.parse(localStorage.getItem('25dpta2_admin_notifications')) || [];
+            
+            // Cập nhật UI
+            updateDashboard();
+            updateBadges();
+            displayRecentParticipants();
+            
+            // Khởi tạo biểu đồ
+            initChart();
+        }
+        
+        // Cập nhật dashboard
+        function updateDashboard() {
+            // Tổng số người đăng ký
+            document.getElementById('total-participants').textContent = participants.length;
+            document.getElementById('participant-badge').textContent = participants.length;
+            document.getElementById('total-tickets').textContent = participants.length;
+            
+            // Số người đăng ký hôm nay
+            const today = new Date().toLocaleDateString('vi-VN');
+            const todayCount = participants.filter(p => p.registrationDate === today).length;
+            document.getElementById('today-count').textContent = todayCount;
+            
+            // Số lớp tham gia
+            const classes = [...new Set(participants.map(p => p.class).filter(c => c))];
+            document.getElementById('total-classes').textContent = classes.length;
+            
+            // Tỷ lệ tham gia (so với mục tiêu 100 người)
+            const rate = Math.min(100, Math.round((participants.length / 100) * 100));
+            document.getElementById('participation-rate').textContent = rate + '%';
+            
+            // Cập nhật filter lớp
+            updateClassFilter(classes);
+        }
+        
+        // Cập nhật badges
+        function updateBadges() {
+            // Badge cho participants
+            document.getElementById('participant-badge').textContent = participants.length;
+            
+            // Badge cho notifications (chưa đọc)
+            const unreadNotifications = notifications.filter(n => !n.read).length;
+            const notificationBadge = document.getElementById('notification-badge');
+            
+            if (unreadNotifications > 0) {
+                notificationBadge.textContent = unreadNotifications;
+                notificationBadge.classList.remove('hidden');
+            } else {
+                notificationBadge.classList.add('hidden');
+            }
+        }
+        
+        // Cập nhật filter lớp
+        function updateClassFilter(classes) {
+            const filterSelect = document.getElementById('filter-class');
+            
+            // Xóa các option cũ (giữ lại option đầu tiên)
+            while (filterSelect.options.length > 1) {
+                filterSelect.remove(1);
+            }
+            
+            // Thêm các lớp mới
+            classes.forEach(cls => {
+                const option = document.createElement('option');
+                option.value = cls;
+                option.textContent = cls;
+                filterSelect.appendChild(option);
+            });
+        }
+        
+        // Hiển thị người tham gia gần đây
+        function displayRecentParticipants() {
+            const container = document.getElementById('recent-participants');
+            const recent = participants.slice(-10).reverse(); // Lấy 10 người mới nhất
+            
+            if (recent.length === 0) {
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="p-6 text-center text-gray-500">
+                            <i class="fas fa-users text-3xl mb-2"></i>
+                            <p>Chưa có người tham gia nào</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            let html = '';
+            recent.forEach((p, index) => {
+                html += `
+                    <tr class="participant-row border-b hover:bg-gray-50">
+                        <td class="p-3">${index + 1}</td>
+                        <td class="p-3 font-medium">${p.name}</td>
+                        <td class="p-3 font-bold text-red-600">${p.ticketNumber}</td>
+                        <td class="p-3">${p.class || '—'}</td>
+                        <td class="p-3 text-sm text-gray-500">${p.registrationDate} ${p.registrationTime || ''}</td>
+                    </tr>
+                `;
+            });
+            
+            container.innerHTML = html;
+            
+            // Cập nhật hoạt động gần đây
+            updateRecentActivity();
+        }
+        
+        // Cập nhật hoạt động gần đây
+        function updateRecentActivity() {
+            const container = document.getElementById('recent-activity');
+            const recentActivities = [];
+            
+            // Thêm các đăng ký gần đây
+            participants.slice(-5).reverse().forEach(p => {
+                recentActivities.push({
+                    type: 'registration',
+                    text: `<span class="font-bold">${p.name}</span> vừa đăng ký tham gia`,
+                    time: p.registrationTime || 'Vừa xong',
+                    icon: 'fa-user-plus',
+                    color: 'text-green-600'
+                });
+            });
+            
+            // Thêm các thông báo hệ thống
+            notifications.slice(0, 3).forEach(n => {
+                if (n.type === 'new_registration') {
+                    recentActivities.push({
+                        type: 'notification',
+                        text: `Hệ thống ghi nhận đăng ký mới từ <span class="font-bold">${n.participant.name}</span>`,
+                        time: formatTime(n.timestamp),
+                        icon: 'fa-bell',
+                        color: 'text-blue-600'
+                    });
+                }
+            });
+            
+            // Sắp xếp theo thời gian (mới nhất lên đầu)
+            recentActivities.sort((a, b) => {
+                // Đơn giản hóa - giữ nguyên thứ tự
+                return 0;
+            });
+            
+            if (recentActivities.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-gray-500">
+                        <i class="fas fa-history text-3xl mb-2"></i>
+                        <p>Chưa có hoạt động nào</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            recentActivities.forEach(activity => {
+                html += `
+                    <div class="flex items-start p-3 bg-gray-50 rounded-lg">
+                        <div class="w-10 h-10 ${activity.color} bg-white rounded-full flex items-center justify-center mr-3">
+                            <i class="fas ${activity.icon}"></i>
+                        </div>
+                        <div class="flex-1">
+                            <p class="text-sm">${activity.text}</p>
+                            <p class="text-xs text-gray-500 mt-1">${activity.time}</p>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Hiển thị tất cả người tham gia
+        function displayParticipants() {
+            const container = document.getElementById('all-participants');
+            const searchTerm = document.getElementById('search-participants').value.toLowerCase();
+            const filterClass = document.getElementById('filter-class').value;
+            
+            // Lọc participants
+            let filtered = participants;
+            
+            if (searchTerm) {
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(searchTerm) || 
+                    p.ticketNumber.toString().includes(searchTerm) ||
+                    (p.class && p.class.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            if (filterClass) {
+                filtered = filtered.filter(p => p.class === filterClass);
+            }
+            
+            // Tính toán phân trang
+            const totalPages = Math.ceil(filtered.length / participantsPerPage);
+            const startIndex = (currentPage - 1) * participantsPerPage;
+            const endIndex = startIndex + participantsPerPage;
+            const pageParticipants = filtered.slice(startIndex, endIndex);
+            
+            if (pageParticipants.length === 0) {
+                container.innerHTML = `
+                    <tr>
+                        <td colspan="8" class="p-6 text-center text-gray-500">
+                            <i class="fas fa-users text-3xl mb-2"></i>
+                            <p>Không tìm thấy người tham gia nào</p>
+                        </td>
+                    </tr>
+                `;
+            } else {
+                let html = '';
+                pageParticipants.forEach((p, index) => {
+                    const absoluteIndex = startIndex + index + 1;
+                    
+                    html += `
+                        <tr class="participant-row border-b hover:bg-gray-50">
+                            <td class="p-3">${absoluteIndex}</td>
+                            <td class="p-3 font-medium">${p.name}</td>
+                            <td class="p-3">${p.email || '—'}</td>
+                            <td class="p-3">${p.phone}</td>
+                            <td class="p-3 font-bold text-red-600">${p.ticketNumber}</td>
+                            <td class="p-3">${p.class || '—'}</td>
+                            <td class="p-3">${p.registrationDate}</td>
+                            <td class="p-3">
+                                <button class="text-red-600 hover:text-red-800 mr-2" onclick="viewParticipant(${p.id})" title="Xem chi tiết">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button class="text-red-600 hover:text-red-800" onclick="deleteParticipant(${p.id})" title="Xóa">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                container.innerHTML = html;
+            }
+            
+            // Cập nhật thông tin phân trang
+            document.getElementById('participant-count').textContent = 
+                `Hiển thị ${pageParticipants.length} người tham gia (Tổng: ${filtered.length})`;
+            
+            document.getElementById('page-info').textContent = 
+                `Trang ${currentPage}/${totalPages}`;
+            
+            // Cập nhật trạng thái nút phân trang
+            document.getElementById('prev-page').disabled = currentPage === 1;
+            document.getElementById('next-page').disabled = currentPage === totalPages || totalPages === 0;
+        }
+        
+        // Lọc người tham gia
+        function filterParticipants() {
+            currentPage = 1; // Reset về trang đầu
+            displayParticipants();
+        }
+        
+        // Chuyển đến trang trước
+        function goToPrevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                displayParticipants();
+            }
+        }
+        
+        // Chuyển đến trang sau
+        function goToNextPage() {
+            const searchTerm = document.getElementById('search-participants').value.toLowerCase();
+            const filterClass = document.getElementById('filter-class').value;
+            
+            let filtered = participants;
+            
+            if (searchTerm) {
+                filtered = filtered.filter(p => 
+                    p.name.toLowerCase().includes(searchTerm) || 
+                    p.ticketNumber.toString().includes(searchTerm) ||
+                    (p.class && p.class.toLowerCase().includes(searchTerm))
+                );
+            }
+            
+            if (filterClass) {
+                filtered = filtered.filter(p => p.class === filterClass);
+            }
+            
+            const totalPages = Math.ceil(filtered.length / participantsPerPage);
+            
+            if (currentPage < totalPages) {
+                currentPage++;
+                displayParticipants();
+            }
+        }
+        
+        // Xem chi tiết người tham gia
+        window.viewParticipant = function(id) {
+            const participant = participants.find(p => p.id === id);
+            
+            if (participant) {
+                alert(`
+                    Thông tin chi tiết:
+                    
+                    Họ tên: ${participant.name}
+                    Email: ${participant.email || '—'}
+                    Số điện thoại: ${participant.phone}
+                    Số tham dự: ${participant.ticketNumber}
+                    Lớp: ${participant.class || '—'}
+                    Ngày đăng ký: ${participant.registrationDate}
+                    Thời gian đăng ký: ${participant.registrationTime || '—'}
+                `);
+            }
+        };
+        
+        // Xóa người tham gia
+        window.deleteParticipant = function(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa người tham gia này?')) {
+                participants = participants.filter(p => p.id !== id);
+                localStorage.setItem('25dpta2_participants', JSON.stringify(participants));
+                
+                // Thêm thông báo
+                addNotification('delete_participant', { id: id });
+                
+                // Cập nhật UI
+                loadData();
+                if (document.getElementById('participants-section').classList.contains('hidden')) {
+                    displayParticipants();
+                }
+                
+                alert('Đã xóa người tham gia thành công!');
+            }
+        };
+        
+        // Hiển thị thông báo
+        function displayNotifications() {
+            const container = document.getElementById('notifications-list');
+            
+            if (notifications.length === 0) {
+                container.innerHTML = `
+                    <div class="p-6 text-center text-gray-500">
+                        <i class="fas fa-bell-slash text-3xl mb-2"></i>
+                        <p>Không có thông báo nào</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            notifications.forEach((n, index) => {
+                let message = '';
+                let icon = 'fa-bell';
+                let bgColor = n.read ? 'bg-white' : 'bg-blue-50';
+                
+                if (n.type === 'new_registration') {
+                    message = `<span class="font-bold">${n.participant.name}</span> vừa đăng ký tham gia Mini Game`;
+                    icon = 'fa-user-plus';
+                } else if (n.type === 'delete_participant') {
+                    message = `Đã xóa một người tham gia khỏi hệ thống`;
+                    icon = 'fa-user-minus';
+                }
+                
+                html += `
+                    <div class="p-4 ${bgColor} ${!n.read ? 'border-l-4 border-blue-500' : ''}">
+                        <div class="flex items-start">
+                            <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center mr-3">
+                                <i class="fas ${icon} text-blue-600"></i>
+                            </div>
+                            <div class="flex-1">
+                                <p>${message}</p>
+                                <p class="text-sm text-gray-500 mt-1">${formatTime(n.timestamp)}</p>
+                            </div>
+                            ${!n.read ? `
+                                <button class="text-blue-600 hover:text-blue-800" onclick="markNotificationAsRead(${index})" title="Đánh dấu đã đọc">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+        
+        // Đánh dấu thông báo đã đọc
+        window.markNotificationAsRead = function(index) {
+            notifications[index].read = true;
+            localStorage.setItem('25dpta2_admin_notifications', JSON.stringify(notifications));
+            displayNotifications();
+            updateBadges();
+        };
+        
+        // Đánh dấu tất cả thông báo đã đọc
+        function markAllNotificationsAsRead() {
+            notifications.forEach(n => n.read = true);
+            localStorage.setItem('25dpta2_admin_notifications', JSON.stringify(notifications));
+            displayNotifications();
+            updateBadges();
+        };
+        
+        // Thêm thông báo mới
+        function addNotification(type, data) {
+            const notification = {
+                type: type,
+                data: data,
+                timestamp: new Date().getTime(),
+                read: false
+            };
+            
+            notifications.unshift(notification);
+            
+            // Giới hạn số lượng thông báo
+            if (notifications.length > 50) {
+                notifications = notifications.slice(0, 50);
+            }
+            
+            localStorage.setItem('25dpta2_admin_notifications', JSON.stringify(notifications));
+        }
+        
+        // Định dạng thời gian
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60000) { // Dưới 1 phút
+                return 'Vừa xong';
+            } else if (diff < 3600000) { // Dưới 1 giờ
+                const minutes = Math.floor(diff / 60000);
+                return `${minutes} phút trước`;
+            } else if (diff < 86400000) { // Dưới 1 ngày
+                const hours = Math.floor(diff / 3600000);
+                return `${hours} giờ trước`;
+            } else {
+                return date.toLocaleDateString('vi-VN') + ' ' + date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+            }
+        }
+        
+        // Khởi tạo biểu đồ
+        function initChart() {
+            const ctx = document.getElementById('registration-chart').getContext('2d');
+            
+            // Chuẩn bị dữ liệu cho 7 ngày gần nhất
+            const dates = [];
+            const counts = [];
+            
+            for (let i = 6; i >= 0; i--) {
+                const date = new Date();
+                date.setDate(date.getDate() - i);
+                const dateString = date.toLocaleDateString('vi-VN');
+                dates.push(dateString);
+                
+                // Đếm số người đăng ký trong ngày đó
+                const count = participants.filter(p => p.registrationDate === dateString).length;
+                counts.push(count);
+            }
+            
+            if (chart) {
+                chart.destroy();
+            }
+            
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Số người đăng ký',
+                        data: counts,
+                        borderColor: '#dc2626',
+                        backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Xuất dữ liệu ra Excel
+        function exportToExcel() {
+            // Tạo dữ liệu CSV
+            let csv = 'STT,Họ tên,Email,Số điện thoại,Số vé,Lớp,Ngày đăng ký,Thời gian đăng ký\n';
+            
+            participants.forEach((p, index) => {
+                csv += `${index + 1},"${p.name}","${p.email || ''}","${p.phone}","${p.ticketNumber}","${p.class || ''}","${p.registrationDate}","${p.registrationTime || ''}"\n`;
+            });
+            
+            // Tạo file và tải về
+            const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `danh-sach-nguoi-tham-gia-25dpta2-${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert(`Đã xuất danh sách ${participants.length} người tham gia thành công!`);
+        }
+        
+        // Lưu cài đặt
+        function saveSettings() {
+            // Trong phiên bản này, chỉ lưu trạng thái thông báo
+            const enableNotifications = document.getElementById('enable-notifications').checked;
+            localStorage.setItem('25dpta2_enable_notifications', enableNotifications.toString());
+            
+            // Có thể thêm xử lý mật khẩu ở đây
+            const newPassword = document.querySelector('#settings-section input[type="password"]').value;
+            if (newPassword) {
+                // Lưu mật khẩu mới (trong thực tế cần mã hóa)
+                localStorage.setItem('25dpta2_admin_password', newPassword);
+            }
+            
+            alert('Đã lưu cài đặt thành công!');
+        }
+        
+        // Sao lưu dữ liệu
+        function backupData() {
+            const data = {
+                participants: participants,
+                notifications: notifications,
+                backupDate: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `backup-25dpta2-${new Date().toISOString().split('T')[0]}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            
+            alert('Đã sao lưu dữ liệu thành công!');
+        }
+        
+        // Xóa toàn bộ dữ liệu
+        function resetData() {
+            // Xóa tất cả dữ liệu
+            localStorage.removeItem('25dpta2_participants');
+            localStorage.removeItem('25dpta2_admin_notifications');
+            
+            // Reset biến
+            participants = [];
+            notifications = [];
+            
+            // Cập nhật UI
+            loadData();
+            displayParticipants();
+            
+            alert('Đã xóa toàn bộ dữ liệu thành công!');
+        }
+        
+        // Lắng nghe thông báo từ trang chính
+        window.addEventListener('message', function(event) {
+            if (event.data && event.data.type === 'new_registration') {
+                // Có người đăng ký mới, làm mới dữ liệu
+                loadData();
+                
+                // Hiển thị thông báo
+                if (document.getElementById('notifications-section').classList.contains('hidden')) {
+                    // Chỉ cập nhật badge nếu không ở trang notifications
+                    updateBadges();
+                } else {
+                    // Nếu đang ở trang notifications, làm mới danh sách
+                    displayNotifications();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Thiệp Cưới</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font -->
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    body { font-family: 'Playfair Display', serif; overflow-x: hidden; }
+    .script { font-family: 'Dancing Script', cursive; }
+
+    @keyframes float {
+      0% { transform: translateY(0); opacity: 1; }
+      100% { transform: translateY(100vh); opacity: 0; }
+    }
+  </style>
+</head>
+
+<body class="bg-gradient-to-br from-red-900 via-rose-700 to-pink-900 min-h-screen flex items-center justify-center text-white">
+
+<!-- MÀN HÌNH MỞ -->
+<div id="cover" class="absolute inset-0 bg-gradient-to-br from-red-900 to-rose-800 flex flex-col items-center justify-center z-50 transition-all duration-1000">
+  <h1 class="script text-5xl mb-6">Thiệp Mời</h1>
+  <button onclick="openInvitation()"
+    class="px-8 py-4 bg-white text-red-700 rounded-full text-lg font-semibold shadow-xl hover:scale-110 transition">
+    🌸 Mở Thiệp 🌸
+  </button>
+</div>
+
+<!-- THIỆP -->
+<div id="invitation" class="opacity-0 scale-90 transition-all duration-1000 bg-white text-gray-800 rounded-3xl shadow-2xl max-w-md w-full p-8 relative">
+
+  <!-- Tên khách -->
+  <p class="text-center text-gray-500 mb-2">Trân trọng kính mời</p>
+  <h2 id="guestName"
+      class="script text-3xl text-center text-red-600 mb-4 border-2 border-yellow-400 inline-block px-6 py-2 rounded-full mx-auto">
+    Quý khách
+  </h2>
+
+  <p class="text-center mb-6 text-gray-600">
+    Đến chung vui cùng gia đình chúng tôi trong lễ thành hôn
+  </p>
+
+  <h1 class="script text-5xl text-center text-red-700 mb-2">
+    Minh 💍 Lan
+  </h1>
+
+  <p class="text-center text-gray-700 mb-4">
+    Chủ nhật • 10.02.2026
+  </p>
+
+  <div class="border-t border-dashed my-4"></div>
+
+  <p class="text-center text-gray-700">
+    ⏰ 18:00 <br>
+    📍 Nhà hàng Hoa Viên
+  </p>
+
+  <p class="text-center mt-6 italic text-sm text-gray-500">
+    Sự hiện diện của bạn là niềm hạnh phúc của chúng tôi 💖
+  </p>
+
+  <!-- Nút nhạc -->
+  <button onclick="toggleMusic()" class="absolute top-4 right-4 text-red-600">
+    🎵
+  </button>
+</div>
+
+<!-- NHẠC -->
+<audio id="music" loop>
+  <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_8e3c51a6d7.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+  // LẤY TÊN TỪ URL
+  const params = new URLSearchParams(window.location.search);
+  const guest = params.get("guest");
+  if (guest) document.getElementById("guestName").innerText = guest;
+
+  // MỞ THIỆP
+  function openInvitation() {
+    document.getElementById("cover").classList.add("opacity-0", "pointer-events-none");
+    const inv = document.getElementById("invitation");
+    inv.classList.remove("opacity-0", "scale-90");
+    inv.classList.add("opacity-100", "scale-100");
+
+    document.getElementById("music").play();
+    createFlowers();
+  }
+
+  // NHẠC
+  function toggleMusic() {
+    const music = document.getElementById("music");
+    music.paused ? music.play() : music.pause();
+  }
+
+  // HOA RƠI
+  function createFlowers() {
+    for (let i = 0; i < 30; i++) {
+      const flower = document.createElement("div");
+      flower.innerHTML = "🌸";
+      flower.style.position = "fixed";
+      flower.style.left = Math.random() * 100 + "vw";
+      flower.style.top = "-20px";
+      flower.style.fontSize = Math.random() * 24 + 16 + "px";
+      flower.style.animation = `float ${5 + Math.random() * 5}s linear infinite`;
+      document.body.appendChild(flower);
+
+      setTimeout(() => flower.remove(), 10000);
+    }
+  }
+</script>
+
+</body>
+</html>
