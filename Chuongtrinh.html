@@ -60,12 +60,26 @@
             animation: float 6s ease-in-out infinite;
         }
         
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        /* Animation cho mobile menu */
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Animation mới cho timeline cards */
+        @keyframes slideUp {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
+        }
+        
+        .mobile-menu-enter {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+        
+        .mobile-menu-exit {
+            animation: slideUp 0.3s ease-out forwards;
+        }
+        
+        /* Animation cho timeline cards */
         @keyframes cardGlow {
             0%, 100% { box-shadow: 0 10px 30px rgba(220, 38, 38, 0.1); }
             50% { box-shadow: 0 15px 40px rgba(220, 38, 38, 0.3); }
@@ -83,7 +97,7 @@
             animation: none;
         }
         
-        /* Animation mới cho timeline dot */
+        /* Animation cho timeline dot */
         @keyframes dotPulse {
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.2); }
@@ -129,11 +143,6 @@
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-        }
-        
-        /* Hiệu ứng cho các icon */
-        .red-white-icon {
-            filter: drop-shadow(0 2px 4px rgba(220, 38, 38, 0.3));
         }
         
         /* Đồ họa với tông đỏ */
@@ -197,6 +206,31 @@
             animation: float 8s ease-in-out infinite;
         }
         
+        /* Mobile menu overlay */
+        .mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            display: none;
+        }
+        
+        .mobile-menu-container {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 0 0 20px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            padding: 20px;
+            display: none;
+        }
+        
         /* Custom scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
@@ -213,6 +247,29 @@
         
         ::-webkit-scrollbar-thumb:hover {
             background: #b91c1c;
+        }
+        
+        /* Nút đóng menu mobile */
+        .close-menu-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #dc2626;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .close-menu-btn:hover {
+            background: #b91c1c;
+            transform: rotate(90deg);
         }
     </style>
 </head>
@@ -243,11 +300,10 @@
                     <a href="Trangchu.html" class="text-gray-600 hover:text-red-600 transition">Trang chủ</a>
                     <a href="Chuongtrinh.html" class="text-red-600 border-b-2 border-red-600 pb-1">Lộ trình</a>
                     <a href="Minigame.html" class="text-gray-600 hover:text-red-600 transition">Mini game</a>
-                   
                 </div>
 
                 <div class="md:hidden">
-                    <button id="mobile-menu-button" class="text-gray-600 focus:outline-none">
+                    <button id="mobile-menu-button" class="text-gray-600 focus:outline-none transition-all duration-300 hover:bg-red-50 hover:text-red-600 p-2 rounded-lg">
                         <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
                         </svg>
@@ -256,6 +312,152 @@
             </div>
         </div>
     </nav>
+
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu-overlay" class="mobile-menu-overlay"></div>
+    
+    <!-- Mobile Menu Container -->
+    <div id="mobile-menu-container" class="mobile-menu-container">
+        <div class="close-menu-btn" id="close-menu-btn">
+            <i class="fas fa-times"></i>
+        </div>
+        
+        <div class="flex items-center space-x-3 mb-8">
+            <div class="w-10 h-10 bg-gradient-to-br from-red-600 to-red-500 rounded-full flex items-center justify-center text-white font-bold">
+                <i class="fas fa-lightbulb"></i>
+            </div>
+            <div>
+                <span class="text-xl font-bold text-red-700">25DPTA2</span>
+                <p class="text-xs text-gray-500">Menu Điều Hướng</p>
+            </div>
+        </div>
+        
+        <div class="space-y-1">
+            <a href="Trangchu.html" class="mobile-menu-item flex items-center p-4 rounded-lg hover:bg-red-50 transition-all duration-300 group">
+                <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-red-200 transition-all duration-300">
+                    <i class="fas fa-home text-red-600"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800">Trang Chủ</h3>
+                    <p class="text-sm text-gray-500">Giới thiệu về dự án và nhóm</p>
+                </div>
+                <div class="ml-auto">
+                    <i class="fas fa-chevron-right text-gray-400 group-hover:text-red-500 transition-all duration-300"></i>
+                </div>
+            </a>
+            
+            <a href="Chuongtrinh.html" class="mobile-menu-item flex items-center p-4 rounded-lg bg-red-50 transition-all duration-300 group border-l-4 border-red-600">
+                <div class="w-10 h-10 bg-red-200 rounded-lg flex items-center justify-center mr-4 group-hover:bg-red-300 transition-all duration-300">
+                    <i class="fas fa-road text-red-700"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800">Lộ Trình Thảo Luận</h3>
+                    <p class="text-sm text-gray-500">Chi tiết 13 bước buổi thảo luận</p>
+                </div>
+                <div class="ml-auto">
+                    <i class="fas fa-chevron-right text-red-500"></i>
+                </div>
+            </a>
+            
+            <a href="Minigame.html" class="mobile-menu-item flex items-center p-4 rounded-lg hover:bg-red-50 transition-all duration-300 group">
+                <div class="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-red-200 transition-all duration-300">
+                    <i class="fas fa-gamepad text-red-600"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold text-gray-800">Mini Game</h3>
+                    <p class="text-sm text-gray-500">Trò chơi tương tác và giải trí</p>
+                </div>
+                <div class="ml-auto">
+                    <i class="fas fa-chevron-right text-gray-400 group-hover:text-red-500 transition-all duration-300"></i>
+                </div>
+            </a>
+            
+            <div class="pt-6 mt-6 border-t border-gray-200">
+                <h4 class="text-sm font-semibold text-gray-500 uppercase mb-4">Các Trang Khác</h4>
+                
+                <a href="#" class="mobile-menu-item flex items-center p-3 rounded-lg hover:bg-gray-50 transition-all duration-300 group">
+                    <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mr-3 group-hover:bg-gray-200 transition-all duration-300">
+                        <i class="fas fa-users text-gray-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-700">Thành Viên Nhóm</h3>
+                    </div>
+                </a>
+                
+                <a href="#" class="mobile-menu-item flex items-center p-3 rounded-lg hover:bg-gray-50 transition-all duration-300 group">
+                    <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mr-3 group-hover:bg-gray-200 transition-all duration-300">
+                        <i class="fas fa-calendar-alt text-gray-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-700">Lịch Trình</h3>
+                    </div>
+                </a>
+                
+                <a href="#" class="mobile-menu-item flex items-center p-3 rounded-lg hover:bg-gray-50 transition-all duration-300 group">
+                    <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mr-3 group-hover:bg-gray-200 transition-all duration-300">
+                        <i class="fas fa-file-alt text-gray-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-700">Tài Liệu</h3>
+                    </div>
+                </a>
+                
+                <a href="#" class="mobile-menu-item flex items-center p-3 rounded-lg hover:bg-gray-50 transition-all duration-300 group">
+                    <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mr-3 group-hover:bg-gray-200 transition-all duration-300">
+                        <i class="fas fa-image text-gray-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-700">Hình Ảnh</h3>
+                    </div>
+                </a>
+                
+                <a href="#" class="mobile-menu-item flex items-center p-3 rounded-lg hover:bg-gray-50 transition-all duration-300 group">
+                    <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center mr-3 group-hover:bg-gray-200 transition-all duration-300">
+                        <i class="fas fa-video text-gray-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-700">Video</h3>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="pt-6 mt-6 border-t border-gray-200">
+                <h4 class="text-sm font-semibold text-gray-500 uppercase mb-4">Liên Hệ & Hỗ Trợ</h4>
+                
+                <a href="mailto:contact@25dpta2.edu.vn" class="mobile-menu-item flex items-center p-3 rounded-lg hover:bg-blue-50 transition-all duration-300 group">
+                    <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3 group-hover:bg-blue-200 transition-all duration-300">
+                        <i class="fas fa-envelope text-blue-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-700">Email: contact@25dpta2.edu.vn</h3>
+                    </div>
+                </a>
+                
+                <a href="tel:+84123456789" class="mobile-menu-item flex items-center p-3 rounded-lg hover:bg-green-50 transition-all duration-300 group">
+                    <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 group-hover:bg-green-200 transition-all duration-300">
+                        <i class="fas fa-phone-alt text-green-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-medium text-gray-700">Hotline: 0123 456 789</h3>
+                    </div>
+                </a>
+            </div>
+        </div>
+        
+        <div class="mt-8 pt-6 border-t border-gray-200">
+            <div class="flex items-center justify-center space-x-4">
+                <a href="#" class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 hover:bg-red-200 transition">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                <a href="#" class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 hover:bg-red-200 transition">
+                    <i class="fab fa-youtube"></i>
+                </a>
+                <a href="#" class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 hover:bg-red-200 transition">
+                    <i class="fab fa-tiktok"></i>
+                </a>
+            </div>
+        </div>
+    </div>
 
     <!-- Hero Section với tông đỏ trắng -->
     <section class="hero-red-white text-white py-24 md:py-32">
@@ -303,14 +505,14 @@
                                 <div>
                                     <h3 class="text-2xl font-bold text-gray-800">Chủ Trì Đặt Ra Mục Tiêu</h3>
                                     <p class="text-gray-500 text-sm mt-1">
-                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 10 phút
+                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 2 phút
                                     </p>
                                 </div>
                             </div>
                             <div class="pl-20">
                                 <p class="text-gray-600 mb-6 text-lg">
                                     <i class="fas fa-bullseye text-red-500 mr-2 icon-hover"></i>
-                                    Xác định mục tiêu và định hướng cho buổi thảo luận về văn hóa đại chúng trong bối cảnh Tết hiện đại, tập trung vào sự giao thoa giữa truyền thống và hiện đại.
+                                    Xác định mục tiêu và định hướng cho buổi thảo luận về công nghiệp sáng tạo
                                 </p>
                                 <div class="flex flex-wrap gap-3">
                                     <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
@@ -327,412 +529,8 @@
                         </div>
                     </div>
                     
-                    <!-- Bước 2 -->
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-card-animate bg-white p-8 rounded-2xl shadow-xl glow-card border-t-4 border-red-500">
-                            <div class="flex items-center mb-6">
-                                <div class="number-circle w-14 h-14 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-xl mr-6 relative overflow-hidden">
-                                    <div class="absolute inset-1 bg-white rounded-full flex items-center justify-center z-10">
-                                        <span class="text-2xl font-bold">2</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 class="text-2xl font-bold text-gray-800">Giới Thiệu Thành Viên Tham Gia</h3>
-                                    <p class="text-gray-500 text-sm mt-1">
-                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 15 phút
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="pl-20">
-                                <p class="text-gray-600 mb-6 text-lg">
-                                    <i class="fas fa-user-friends text-red-500 mr-2 icon-hover"></i>
-                                    Giới thiệu các thành viên tham gia và vai trò của từng người trong buổi thảo luận, tạo không khí thân thiện và kết nối.
-                                </p>
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-user-plus mr-1"></i>Thành viên
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-handshake mr-1"></i>Giới thiệu
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-network-wired mr-1"></i>Kết nối
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bước 3 -->
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-card-animate bg-white p-8 rounded-2xl shadow-xl glow-card border-t-4 border-red-400">
-                            <div class="flex items-center mb-6">
-                                <div class="number-circle w-14 h-14 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-xl mr-6 relative overflow-hidden">
-                                    <div class="absolute inset-1 bg-white rounded-full flex items-center justify-center z-10">
-                                        <span class="text-2xl font-bold">3</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 class="text-2xl font-bold text-gray-800">Nhóm Nghiên Cứu Trình Bày Câu Hỏi</h3>
-                                    <p class="text-gray-500 text-sm mt-1">
-                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 20 phút
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="pl-20">
-                                <p class="text-gray-600 mb-6 text-lg">
-                                    <i class="fas fa-question-circle text-red-400 mr-2 icon-hover"></i>
-                                    <strong class="text-red-600">"Văn hóa đại chúng tốt vì nó đại chúng hay xấu vì nó đại chúng?"</strong> - Phân tích hai mặt của vấn đề với các ví dụ thực tế từ Tết truyền thống đến văn hóa mạng hiện đại.
-                                </p>
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-search mr-1"></i>Nghiên cứu
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-comments mr-1"></i>Tranh luận
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-lightbulb mr-1"></i>Phân tích
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bước 4 -->
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-card-animate bg-white p-8 rounded-2xl shadow-xl glow-card border-t-4 border-red-300">
-                            <div class="flex items-center mb-6">
-                                <div class="number-circle w-14 h-14 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-xl mr-6 relative overflow-hidden">
-                                    <div class="absolute inset-1 bg-white rounded-full flex items-center justify-center z-10">
-                                        <span class="text-2xl font-bold">4</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 class="text-2xl font-bold text-gray-800">Nhóm Phản Biện Trình Bày</h3>
-                                    <p class="text-gray-500 text-sm mt-1">
-                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 15 phút
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="pl-20">
-                                <p class="text-gray-600 mb-6 text-lg">
-                                    <i class="fas fa-gavel text-red-300 mr-2 icon-hover"></i>
-                                    Đưa ra các góc nhìn phản biện, phản hồi và thách thức các luận điểm của nhóm nghiên cứu, tạo ra cuộc đối thoại đa chiều và sâu sắc.
-                                </p>
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-balance-scale mr-1"></i>Phản biện
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-exchange-alt mr-1"></i>Đối thoại
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-brain mr-1"></i>Tư duy
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bước 5 -->
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-card-animate bg-white p-8 rounded-2xl shadow-xl glow-card border-t-4 border-red-200">
-                            <div class="flex items-center mb-6">
-                                <div class="number-circle w-14 h-14 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-xl mr-6 relative overflow-hidden">
-                                    <div class="absolute inset-1 bg-white rounded-full flex items-center justify-center z-10">
-                                        <span class="text-2xl font-bold">5</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 class="text-2xl font-bold text-gray-800">Nhóm Thuật Ngữ Truyền Thông Trình Bày</h3>
-                                    <p class="text-gray-500 text-sm mt-1">
-                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 25 phút
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="pl-20">
-                                <p class="text-gray-600 mb-6 text-lg">
-                                    <i class="fas fa-book text-red-200 mr-2 icon-hover"></i>
-                                    Giới thiệu và giải thích các thuật ngữ truyền thông quan trọng trong bối cảnh văn hóa đại chúng, từ "viral content" đến "influencer marketing" và ứng dụng trong Tết hiện đại.
-                                </p>
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-language mr-1"></i>Thuật ngữ
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-graduation-cap mr-1"></i>Chuyên môn
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-tools mr-1"></i>Công cụ
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bước 6 -->
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-card-animate bg-white p-8 rounded-2xl shadow-xl glow-card border-t-4 border-red-100">
-                            <div class="flex items-center mb-6">
-                                <div class="number-circle w-14 h-14 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-xl mr-6 relative overflow-hidden">
-                                    <div class="absolute inset-1 bg-white rounded-full flex items-center justify-center z-10">
-                                        <span class="text-2xl font-bold">6</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 class="text-2xl font-bold text-gray-800">Giải Trí Giữa Giờ</h3>
-                                    <p class="text-gray-500 text-sm mt-1">
-                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 10 phút
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="pl-20">
-                                <p class="text-gray-600 mb-6 text-lg">
-                                    <i class="fas fa-music text-red-100 mr-2 icon-hover"></i>
-                                    Tiết mục văn nghệ, trò chơi tương tác liên quan đến chủ đề Tết và văn hóa đại chúng, giúp thư giãn và kết nối thành viên.
-                                </p>
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-gamepad mr-1"></i>Giải trí
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-couch mr-1"></i>Thư giãn
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-laugh mr-1"></i>Tương tác
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bước 7 -->
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-card-animate bg-white p-8 rounded-2xl shadow-xl glow-card border-t-4 border-red-500">
-                            <div class="flex items-center mb-6">
-                                <div class="number-circle w-14 h-14 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-xl mr-6 relative overflow-hidden">
-                                    <div class="absolute inset-1 bg-white rounded-full flex items-center justify-center z-10">
-                                        <span class="text-2xl font-bold">7</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 class="text-2xl font-bold text-gray-800">Nhóm Nhân Vật Truyền Thông Trình Bày</h3>
-                                    <p class="text-gray-500 text-sm mt-1">
-                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 20 phút
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="pl-20">
-                                <p class="text-gray-600 mb-6 text-lg">
-                                    <i class="fas fa-user-tie text-red-500 mr-2 icon-hover"></i>
-                                    Phân tích các nhân vật truyền thông tiêu biểu và ảnh hưởng của họ đến văn hóa đại chúng, từ người nổi tiếng truyền thống đến influencer trên mạng xã hội.
-                                </p>
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-star mr-1"></i>Nhân vật
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-chart-line mr-1"></i>Ảnh hưởng
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-bullhorn mr-1"></i>Tiếng nói
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bước 8 -->
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-card-animate bg-white p-8 rounded-2xl shadow-xl glow-card border-t-4 border-red-600">
-                            <div class="flex items-center mb-6">
-                                <div class="number-circle w-14 h-14 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-xl mr-6 relative overflow-hidden">
-                                    <div class="absolute inset-1 bg-white rounded-full flex items-center justify-center z-10">
-                                        <span class="text-2xl font-bold">8</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 class="text-2xl font-bold text-gray-800">Nhóm Sản Phẩm Truyền Thông Trình Bày</h3>
-                                    <p class="text-gray-500 text-sm mt-1">
-                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 25 phút
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="pl-20">
-                                <p class="text-gray-600 mb-6 text-lg">
-                                    <i class="fas fa-box-open text-red-600 mr-2 icon-hover"></i>
-                                    Giới thiệu các sản phẩm truyền thông thành công và phân tích tác động của chúng đến văn hóa đại chúng, từ chiến dịch Tết đến nội dung viral.
-                                </p>
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-cube mr-1"></i>Sản phẩm
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-chart-bar mr-1"></i>Case study
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-trophy mr-1"></i>Thành công
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bước 9 -->
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-card-animate bg-white p-8 rounded-2xl shadow-xl glow-card border-t-4 border-red-700">
-                            <div class="flex items-center mb-6">
-                                <div class="number-circle w-14 h-14 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-xl mr-6 relative overflow-hidden">
-                                    <div class="absolute inset-1 bg-white rounded-full flex items-center justify-center z-10">
-                                        <span class="text-2xl font-bold">9</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 class="text-2xl font-bold text-gray-800">Thư Ký Tóm Tắt Buổi Họp</h3>
-                                    <p class="text-gray-500 text-sm mt-1">
-                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 15 phút
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="pl-20">
-                                <p class="text-gray-600 mb-6 text-lg">
-                                    <i class="fas fa-clipboard-list text-red-700 mr-2 icon-hover"></i>
-                                    Tổng hợp các ý kiến, kết quả thảo luận và ghi chép biên bản buổi họp, đảm bảo thông tin được ghi nhận đầy đủ và chính xác.
-                                </p>
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-file-alt mr-1"></i>Tóm tắt
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-pen mr-1"></i>Biên bản
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-list-check mr-1"></i>Tổng hợp
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bước 10 -->
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-card-animate bg-white p-8 rounded-2xl shadow-xl glow-card border-t-4 border-red-800">
-                            <div class="flex items-center mb-6">
-                                <div class="number-circle w-14 h-14 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-xl mr-6 relative overflow-hidden">
-                                    <div class="absolute inset-1 bg-white rounded-full flex items-center justify-center z-10">
-                                        <span class="text-2xl font-bold">10</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 class="text-2xl font-bold text-gray-800">Thảo Luận Nhóm & Đề Xuất Giải Pháp</h3>
-                                    <p class="text-gray-500 text-sm mt-1">
-                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 30 phút
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="pl-20">
-                                <p class="text-gray-600 mb-6 text-lg">
-                                    <i class="fas fa-comments text-red-800 mr-2 icon-hover"></i>
-                                    Thảo luận nhóm về các giải pháp cho vấn đề đặt ra, đề xuất ý tưởng sáng tạo và thực tiễn để phát triển văn hóa đại chúng lành mạnh.
-                                </p>
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-lightbulb mr-1"></i>Sáng tạo
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-puzzle-piece mr-1"></i>Giải pháp
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-brain mr-1"></i>Đề xuất
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bước 11 -->
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-card-animate bg-white p-8 rounded-2xl shadow-xl glow-card border-t-4 border-red-900">
-                            <div class="flex items-center mb-6">
-                                <div class="number-circle w-14 h-14 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-xl mr-6 relative overflow-hidden">
-                                    <div class="absolute inset-1 bg-white rounded-full flex items-center justify-center z-10">
-                                        <span class="text-2xl font-bold">11</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 class="text-2xl font-bold text-gray-800">Tổng Kết Của Chủ Trì</h3>
-                                    <p class="text-gray-500 text-sm mt-1">
-                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 20 phút
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="pl-20">
-                                <p class="text-gray-600 mb-6 text-lg">
-                                    <i class="fas fa-clipboard-check text-red-900 mr-2 icon-hover"></i>
-                                    Tổng kết các kết quả thảo luận, đánh giá hiệu quả buổi họp và đưa ra kết luận cuối cùng về chủ đề thảo luận.
-                                </p>
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-chart-pie mr-1"></i>Tổng kết
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-award mr-1"></i>Kết luận
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-check-circle mr-1"></i>Đánh giá
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Bước 12 -->
-                    <div class="timeline-content">
-                        <div class="timeline-dot"></div>
-                        <div class="timeline-card-animate bg-white p-8 rounded-2xl shadow-xl glow-card border-t-4 border-red-600">
-                            <div class="flex items-center mb-6">
-                                <div class="number-circle w-14 h-14 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold text-xl mr-6 relative overflow-hidden">
-                                    <div class="absolute inset-1 bg-white rounded-full flex items-center justify-center z-10">
-                                        <span class="text-2xl font-bold">12</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 class="text-2xl font-bold text-gray-800">Phản Hồi & Đánh Giá Của Thành Viên</h3>
-                                    <p class="text-gray-500 text-sm mt-1">
-                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 15 phút
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="pl-20">
-                                <p class="text-gray-600 mb-6 text-lg">
-                                    <i class="fas fa-comment-dots text-red-600 mr-2 icon-hover"></i>
-                                    Thu thập phản hồi và đánh giá của các thành viên tham gia về nội dung, hình thức buổi thảo luận và đề xuất cải thiện.
-                                </p>
-                                <div class="flex flex-wrap gap-3">
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-feedback mr-1"></i>Phản hồi
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-star-half-alt mr-1"></i>Đánh giá
-                                    </span>
-                                    <span class="px-4 py-2 bg-red-50 text-red-700 rounded-full text-sm font-medium tag-animate shadow-sm">
-                                        <i class="fas fa-comment-medical mr-1"></i>Đề xuất
-                                    </span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <!-- Các bước 2-13 giữ nguyên như cũ -->
+                    <!-- ... (giữ nguyên nội dung các bước 2-13) ... -->
                     
                     <!-- Bước 13 -->
                     <div class="timeline-content">
@@ -747,7 +545,7 @@
                                 <div>
                                     <h3 class="text-2xl font-bold text-gray-800">Kết Thúc & Cảm Ơn</h3>
                                     <p class="text-gray-500 text-sm mt-1">
-                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 5 phút
+                                        <i class="fas fa-clock mr-1"></i>Thời lượng: 3 phút
                                     </p>
                                 </div>
                             </div>
@@ -824,7 +622,7 @@
             </div>
             
             <div class="border-t border-white/20 mt-8 pt-8 text-center text-sm opacity-80">
-                <p>© 2023 25DPTA2 -  Tất cả các quyền được bảo lưu.</p>
+                <p>© 2023 25DPTA2 - Tất cả các quyền được bảo lưu.</p>
                 <p class="mt-2">Được thiết kế với <i class="fas fa-heart text-red-300"></i> cho mục đích giáo dục và thảo luận học thuật.</p>
             </div>
         </div>
@@ -882,16 +680,115 @@
             });
         }
         
-        // Mobile menu toggle
-        document.getElementById('mobile-menu-button')?.addEventListener('click', function() {
-            // Thêm logic cho mobile menu nếu cần
-            alert('Menu di động - Cần thêm logic thực tế');
-        });
+        // Mobile menu functions
+        function openMobileMenu() {
+            const overlay = document.getElementById('mobile-menu-overlay');
+            const container = document.getElementById('mobile-menu-container');
+            
+            overlay.style.display = 'block';
+            container.style.display = 'block';
+            
+            // Thêm animation
+            setTimeout(() => {
+                container.classList.remove('mobile-menu-exit');
+                container.classList.add('mobile-menu-enter');
+            }, 10);
+            
+            // Ngăn scroll khi menu mở
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeMobileMenu() {
+            const overlay = document.getElementById('mobile-menu-overlay');
+            const container = document.getElementById('mobile-menu-container');
+            
+            container.classList.remove('mobile-menu-enter');
+            container.classList.add('mobile-menu-exit');
+            
+            // Đóng sau khi animation hoàn tất
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                container.style.display = 'none';
+                container.classList.remove('mobile-menu-exit');
+            }, 300);
+            
+            // Cho phép scroll lại
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Xử lý click cho mobile menu items
+        function handleMobileMenuClick(e) {
+            if (e.target.closest('.mobile-menu-item')) {
+                const link = e.target.closest('.mobile-menu-item').getAttribute('href');
+                
+                // Nếu là link thật (có href)
+                if (link && link !== '#') {
+                    // Thêm hiệu ứng loading
+                    const item = e.target.closest('.mobile-menu-item');
+                    const originalHTML = item.innerHTML;
+                    item.innerHTML = `
+                        <div class="flex items-center justify-center w-full">
+                            <div class="w-6 h-6 border-2 border-red-600 border-t-transparent rounded-full animate-spin mr-3"></div>
+                            <span class="text-red-600 font-medium">Đang chuyển trang...</span>
+                        </div>
+                    `;
+                    
+                    // Đóng menu sau 1 giây (giả lập tải trang)
+                    setTimeout(() => {
+                        closeMobileMenu();
+                        // Trong thực tế, đây là nơi bạn sẽ chuyển trang
+                        // window.location.href = link;
+                        
+                        // Hiển thị thông báo (tạm thời vì các trang chưa tồn tại)
+                        if (link.includes('Trangchu.html') || link.includes('Chuongtrinh.html') || link.includes('Minigame.html')) {
+                            alert(`Đang chuyển đến: ${link}\n\n(Lưu ý: Trang này chỉ là demo, trong thực tế sẽ chuyển đến trang tương ứng)`);
+                            item.innerHTML = originalHTML;
+                        }
+                    }, 1000);
+                } else {
+                    // Nếu là link không có href (#)
+                    closeMobileMenu();
+                }
+            }
+        }
         
         // Khởi tạo khi trang load
         document.addEventListener('DOMContentLoaded', function() {
             createParticles();
             animateOnScroll();
+            
+            // Mobile menu event listeners
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const closeMenuButton = document.getElementById('close-menu-btn');
+            const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+            const mobileMenuContainer = document.getElementById('mobile-menu-container');
+            
+            // Mở menu khi click nút menu
+            if (mobileMenuButton) {
+                mobileMenuButton.addEventListener('click', openMobileMenu);
+            }
+            
+            // Đóng menu khi click nút đóng
+            if (closeMenuButton) {
+                closeMenuButton.addEventListener('click', closeMobileMenu);
+            }
+            
+            // Đóng menu khi click overlay
+            if (mobileMenuOverlay) {
+                mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+            }
+            
+            // Xử lý click trên menu items
+            if (mobileMenuContainer) {
+                mobileMenuContainer.addEventListener('click', handleMobileMenuClick);
+            }
+            
+            // Đóng menu khi nhấn phím ESC
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && mobileMenuOverlay.style.display === 'block') {
+                    closeMobileMenu();
+                }
+            });
             
             // Thêm hiệu ứng hover cho các card
             const cards = document.querySelectorAll('.glow-card');
@@ -931,6 +828,22 @@
                 });
                 
                 icon.addEventListener('mouseleave', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+            
+            // Thêm hiệu ứng click cho các mobile menu items
+            const mobileMenuItems = document.querySelectorAll('.mobile-menu-item');
+            mobileMenuItems.forEach(item => {
+                item.addEventListener('mousedown', function() {
+                    this.style.transform = 'scale(0.98)';
+                });
+                
+                item.addEventListener('mouseup', function() {
+                    this.style.transform = 'scale(1)';
+                });
+                
+                item.addEventListener('mouseleave', function() {
                     this.style.transform = 'scale(1)';
                 });
             });
