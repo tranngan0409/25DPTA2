@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>25DPTA2 - Tìm hiểu Công nghiệp Sáng tạo</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Be Vietnam Pro', sans-serif; }
+        
+        /* ========== ANIMATION HÌNH NỀN MỚI ========== */
+        .bg-multimedia {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .bg-multimedia::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(185, 28, 28, 0.85), rgba(220, 38, 38, 0.9)),
+                url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=1600');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            animation: backgroundAnimation 20s ease-in-out infinite;
+            z-index: 1;
+        }
+        
+        /* Animation chính cho background */
+        @keyframes backgroundAnimation {
+            0%, 100% {
+                transform: scale(1) rotate(0deg);
+                filter: hue-rotate(0deg) brightness(1);
+            }
+            25% {
+                transform: scale(1.05) rotate(0.5deg);
+                filter: hue-rotate(10deg) brightness(1.1);
+            }
+            50% {
+                transform: scale(1.03) rotate(-0.3deg);
+                filter: hue-rotate(20deg) brightness(1.05);
+            }
+            75% {
+                transform: scale(1.07) rotate(0.2deg);
+                filter: hue-rotate(30deg) brightness(1.15);
+            }
+        }
+        
+        /* Particle overlay cho background */
+        .bg-multimedia::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 90%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+                linear-gradient(45deg, transparent 48%, rgba(255, 255, 255, 0.05) 50%, transparent 52%),
+                linear-gradient(135deg, transparent 48%, rgba(255, 255, 255, 0.05) 50%, transparent 52%);
+            background-size: 300px 300px, 400px 400px, 500px 500px, 100px 100px, 100px 100px;
+            animation: particleMove 40s linear infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        @keyframes particleMove {
+            0% {
+                background-position: 0px 0px, 100px 200px, 300px 100px, 0 0, 0 0;
+            }
+            100% {
+                background-position: 300px 300px, 500px 400px, 800px 600px, 100px 100px, 100px 100px;
+            }
+        }
+        
+        /* Glitch effect đôi khi */
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
+        }
+        
+        .bg-multimedia:hover::before {
+            animation: backgroundAnimation 20s ease-in-out infinite, glitch 0.3s ease-in-out;
+        }
+        
+        /* Gradient overlay animation */
+        .gradient-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, 
+                rgba(220, 38, 38, 0.7) 0%, 
+                rgba(185, 28, 28, 0.5) 25%,
+                rgba(234, 88, 12, 0.6) 50%,
+                rgba(202, 138, 4, 0.5) 75%,
+                rgba(220, 38, 38, 0.7) 100%);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+            mix-blend-mode: overlay;
+            z-index: 3;
+            pointer-events: none;
+        }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        /* Scan line effect */
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, 
+                transparent 0%, 
+                rgba(255, 255, 255, 0.8) 50%, 
+                transparent 100%);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+            animation: scanLine 4s linear infinite;
+            z-index: 4;
+            pointer-events: none;
+        }
+        
+        @keyframes scanLine {
+            0% { top: 0%; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        
+        /* Pulse effect cho background */
+        .pulse-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                transparent 70%);
+            animation: pulseEffect 6s ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        @keyframes pulseEffect {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.5); opacity: 0.8; }
+        }
+        
+        /* Content z-index để ở trên cùng */
+        .hero-content {
+            position: relative;
+            z-index: 10;
+        }
+        
+        /* ========== CÁC ANIMATIONS CŨ ========== */
+        
+        .lion-logo {
+            background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .fade-in-shadow {
+            animation: fadeInShadow 2s ease-in-out;
+        }
+        
+        @keyframes fadeInShadow {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px) scale(0.95);
+                filter: blur(5px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+                filter: blur(0);
+            }
+        }
+        
+        .float-element {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .typewriter {
+            overflow: hidden;
+            border-right: .15em solid #fbbf24;
+            white-space: nowrap;
+            animation: typing 3.5s steps(40, end), blink-caret .75s step-end infinite;
+        }
+        
+        @keyframes typing {
+            from { width: 0 }
+            to { width: 100% }
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #fbbf24; }
+        }
+        
+        .bounce-on-hover:hover {
+            animation: bounce 0.5s ease infinite alternate;
+        }
+        
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-10px); }
+        }
+        
+        .shimmer-card {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .shimmer-card::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: rotate(30deg);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) rotate(30deg); }
+            100% { transform: translateX(100%) rotate(30deg); }
+        }
+        
+        .pulse-glow {
+            animation: pulseGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes pulseGlow {
+            0% { 
+                box-shadow: 0 0 5px rgba(220, 38, 38, 0.5),
+                          0 0 10px rgba(220, 38, 38, 0.3); 
+            }
+            100% { 
+                box-shadow: 0 0 20px rgba(220, 38, 38, 0.8),
+                          0 0 30px rgba(220, 38, 38, 0.5),
+                          0 0 40px rgba(220, 38, 38, 0.3); 
+            }
+        }
+        
+        .rotate-3d {
+            animation: rotate3d 8s linear infinite;
+        }
+        
+        @keyframes rotate3d {
+            0% { transform: rotateY(0deg) rotateX(0deg); }
+            25% { transform: rotateY(90deg) rotateX(10deg); }
+            50% { transform: rotateY(180deg) rotateX(0deg); }
+            75% { transform: rotateY(270deg) rotateX(10deg); }
+            100% { transform: rotateY(360deg) rotateX(0deg); }
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 1s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from { transform: translateX(-100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 1s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        
+        .slide-in-bottom {
+            animation: slideInBottom 1s ease-out;
+        }
+        
+        @keyframes slideInBottom {
+            from { transform: translateY(100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(90deg, #dc2626, #ea580c, #fbbf24, #ea580c, #dc2626);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: gradientShift 4s ease infinite;
+        }
+        
+        .stagger-item {
+            opacity: 0;
+            animation: fadeInUp 0.8s ease forwards;
+        }
+        
+        .stagger-item:nth-child(1) { animation-delay: 0.1s; }
+        .stagger-item:nth-child(2) { animation-delay: 0.3s; }
+        .stagger-item:nth-child(3) { animation-delay: 0.5s; }
+        .stagger-item:nth-child(4) { animation-delay: 0.7s; }
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        /* ========== CÁC STYLE CŨ ĐƯỢC GIỮ LẠI ========== */
+        
+        .culture-pattern {
+            background-color: #ffffff;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(220, 38, 38, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(220, 38, 38, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(185, 28, 28, 0.05) 0%, transparent 30%),
+                linear-gradient(45deg, transparent 49%, rgba(220, 38, 38, 0.05) 50%, transparent 51%),
+                linear-gradient(135deg, transparent 49%, rgba(185, 28, 28, 0.05) 50%, transparent 51%);
+            background-size: 100px 100px, 150px 150px, 200px 200px, 40px 40px, 40px 40px;
+        }
+        
+        .nav-item {
+            position: relative;
+            padding: 8px 0;
+        }
+        
+        .nav-item::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 3px;
+            bottom: 0;
+            left: 0;
+            background: linear-gradient(90deg, #dc2626, #ea580c);
+            transition: width 0.3s ease;
+            border-radius: 2px;
+        }
+        
+        .nav-item:hover::after {
+            width: 100%;
+        }
+        
+        .social-icon {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .social-icon::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .social-icon:hover::before {
+            left: 100%;
+        }
+        
+        .footer-pattern {
+            background-color: #dc2626;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 2px, transparent 3px),
+                radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.1) 2px, transparent 3px),
+                radial-gradient(circle at 40% 90%, rgba(255, 255, 255, 0.1) 2px, transparent 3px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(0deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+            background-size: 80px 80px, 120px 120px, 60px 60px, 40px 40px, 40px 40px;
+        }
+        
+        .spinning {
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .glow-card {
+            box-shadow: 0 10px 30px rgba(220, 38, 38, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .glow-card:hover {
+            box-shadow: 0 15px 40px rgba(220, 38, 38, 0.2);
+            transform: translateY(-10px) scale(1.02);
+        }
+        
+        .timeline-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dc2626 0%, #ea580c 100%);
+            position: absolute;
+            left: -10px;
+            top: 5px;
+        }
+        
+        .timeline-content {
+            margin-left: 30px;
+            padding-bottom: 40px;
+            border-left: 3px solid #fecaca;
+            padding-left: 30px;
+            position: relative;
+        }
+        
+        .timeline-content:last-child {
+            border-left: 3px solid transparent;
+        }
+        
+        .testimonial-card {
+            background: linear-gradient(135deg, #ffffff 0%, #fef2f2 100%);
+            border-left: 5px solid #dc2626;
+            transition: all 0.3s ease;
+        }
+        
+        .testimonial-card:hover {
+            transform: translateY(-10px) rotate(1deg);
+            box-shadow: 0 20px 40px rgba(220, 38, 38, 0.15);
+        }
+        
+        .confetti {
+            position: fixed;
+            width: 15px;
+            height: 15px;
+            opacity: 0;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-gray-800 overflow-x-hidden">
+
+    <!-- Background particles -->
+    <div id="particles-container"></div>
+
+    <nav class="sticky top-0 z-50 border-b border-gray-200 shadow-lg culture-pattern slide-in-bottom">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <div class="flex items-center space-x-3">
+                    <div class="lion-logo w-12 h-12 rounded-full text-white font-bold text-xl shadow-lg pulse-glow">
+                        <i class="fas fa-dragon text-2xl rotate-3d"></i>
+                    </div>
+                    <span class="text-2xl font-bold text-red-700 tracking-tight gradient-text">25DPTA2</span>
+                </div>
+                
+                <div class="hidden md:flex space-x-10 font-medium">
+                    <a href="Trangchu.html" class="nav-item text-red-600 font-semibold bounce-on-hover">Trang chủ</a>
+                    <a href="Chuongtrinh.html" class="nav-item text-gray-700 hover:text-red-600 transition bounce-on-hover">Lộ trình</a>
+                    <a href="Minigame.html" class="nav-item text-gray-700 hover:text-red-600 transition bounce-on-hover">Mini Game</a>
+                                    </div>
+
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-gray-700 focus:outline-none bounce-on-hover">
+                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section với hình nền có animation -->
+    <section class="bg-multimedia text-white py-24 md:py-32 relative">
+        <!-- Gradient overlay animation -->
+        <div class="gradient-overlay"></div>
+        
+        <!-- Scan line effect -->
+        <div class="scan-line"></div>
+        
+        <!-- Pulse effect -->
+        <div class="pulse-bg"></div>
+        
+        <!-- Floating elements cho background -->
+        <div class="absolute top-10 left-10 w-32 h-32 bg-yellow-400/10 rounded-full float-element"></div>
+        <div class="absolute bottom-20 right-10 w-40 h-40 bg-red-500/10 rounded-full float-element" style="animation-delay: 1s;"></div>
+        <div class="absolute top-1/3 right-1/4 w-24 h-24 bg-amber-500/10 rounded-full float-element" style="animation-delay: 2s;"></div>
+        <div class="absolute bottom-1/3 left-1/4 w-28 h-28 bg-white/5 rounded-full float-element" style="animation-delay: 3s;"></div>
+        
+        <!-- Glitch effect trigger -->
+        <div class="absolute inset-0 z-5"></div>
+        
+        <!-- Nội dung chính -->
+        <div class="max-w-7xl mx-auto px-4 text-center relative hero-content fade-in-shadow">
+            <h2 class="text-sm uppercase tracking-widest mb-4 font-semibold opacity-90 slide-in-left">Kết nối văn hóa-kiến tạo tương lai</h2>
+            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight slide-in-right">
+                Tìm hiểu <br> 
+                <span class="text-yellow-400 typewriter">Công nghiệp sáng tạo</span>
+            </h1>
+            <p class="text-lg md:text-xl max-w-2xl mx-auto mb-10 opacity-90 font-light slide-in-bottom">
+                Công nghiệp sáng tạo: Đưa văn hóa chạm triệu trái tim.
+            </p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <button class="border-2 border-white text-white px-8 py-3 rounded-full font-bold hover:bg-white hover:text-red-700 transition transform hover:scale-105 duration-300 shadow-lg bounce-on-hover pulse-glow">
+                    Tìm hiểu thêm
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phần còn lại của code giữ nguyên... -->
+    <section class="py-20 max-w-7xl mx-auto px-4">
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white p-8 rounded-2xl shadow-lg border-t-4 border-red-600 hover:shadow-xl transition-all duration-500 stagger-item shimmer-card">
+                <div class="text-red-600 mb-4 text-3xl float-element">🎬</div>
+                <h3 class="text-xl font-bold mb-3 uppercase gradient-text">Văn hóa đại chúng</h3>
+                <p class="text-gray-600">Khám phá sức mạnh của phim ảnh, âm nhạc và nội dung số trong việc định hình văn hóa đại chúng.</p>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-lg border-t-4 border-red-600 hover:shadow-xl transition-all duration-500 stagger-item shimmer-card">
+                <div class="text-red-600 mb-4 text-3xl float-element" style="animation-delay: 0.5s;">🎨</div>
+                <h3 class="text-xl font-bold mb-3 uppercase gradient-text">Sáng tạo mới</h3>
+                <p class="text-gray-600">Thiết kế, công nghệ và nội dung số: Đổi mới từ truyền thống đến hiện đại.</p>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-lg border-t-4 border-red-600 hover:shadow-xl transition-all duration-500 stagger-item shimmer-card">
+                <div class="text-red-600 mb-4 text-3xl float-element" style="animation-delay: 1s;">📈</div>
+                <h3 class="text-xl font-bold mb-3 uppercase gradient-text">Phát triển</h3>
+                <p class="text-gray-600">Thúc đẩy quảng bá giá trị văn hóa thông qua sức mạnh kinh tế văn hóa.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phần Lộ trình chương trình -->
+    <section id="program" class="py-20 bg-gradient-to-b from-white to-red-50">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 gradient-text slide-in-left">Lộ Trình Chương Trình</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto slide-in-right">Khám phá 4 bước quan trọng để hiểu sâu về văn hóa đại chúng và truyền thông</p>
+            </div>
+            
+            <div class="max-w-4xl mx-auto">
+                <div class="relative">
+                    <!-- Timeline items với stagger animation -->
+                    <div class="timeline-content stagger-item">
+                        <div class="timeline-dot pulse-glow"></div>
+                        <div class="bg-white p-6 rounded-2xl shadow-md glow-card">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold mr-4 float-element">1</div>
+                                <h3 class="text-xl font-bold text-gray-800 gradient-text">Nghiên cứu về Văn hóa đại chúng</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4">Tìm hiểu về các xu hướng văn hóa đại chúng, từ âm nhạc, phim ảnh đến các hiện tượng mạng xã hội và tác động của chúng đến xã hội.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium bounce-on-hover">Xu hướng</span>
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium bounce-on-hover">Phân tích</span>
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium bounce-on-hover">Tác động xã hội</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-content stagger-item">
+                        <div class="timeline-dot pulse-glow"></div>
+                        <div class="bg-white p-6 rounded-2xl shadow-md glow-card">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold mr-4 float-element" style="animation-delay: 0.5s;">2</div>
+                                <h3 class="text-xl font-bold text-gray-800 gradient-text">Tìm hiểu thuật ngữ truyền thông</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4">Khám phá các thuật ngữ quan trọng trong ngành truyền thông như: viral content, engagement rate, target audience, storytelling và nhiều thuật ngữ chuyên ngành khác.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium bounce-on-hover">Thuật ngữ</span>
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium bounce-on-hover">Chuyên ngành</span>
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium bounce-on-hover">Kiến thức cơ bản</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-content stagger-item">
+                        <div class="timeline-dot pulse-glow"></div>
+                        <div class="bg-white p-6 rounded-2xl shadow-md glow-card">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold mr-4 float-element" style="animation-delay: 1s;">3</div>
+                                <h3 class="text-xl font-bold text-gray-800 gradient-text">Tìm hiểu nhân vật truyền thông</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4">Phân tích các nhân vật truyền thông tiêu biểu, những người có ảnh hưởng lớn đến công chúng và cách họ xây dựng thương hiệu cá nhân.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium bounce-on-hover">Influencer</span>
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium bounce-on-hover">Case study</span>
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium bounce-on-hover">Thương hiệu cá nhân</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-content stagger-item">
+                        <div class="timeline-dot pulse-glow"></div>
+                        <div class="bg-white p-6 rounded-2xl shadow-md glow-card">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-600 font-bold mr-4 float-element" style="animation-delay: 1.5s;">4</div>
+                                <h3 class="text-xl font-bold text-gray-800 gradient-text">Tìm hiểu sản phẩm truyền thông</h3>
+                            </div>
+                            <p class="text-gray-600 mb-4">Nghiên cứu các sản phẩm truyền thông thành công, từ chiến dịch marketing, series phim, chương trình truyền hình đến các chiến dịch truyền thông xã hội.</p>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium bounce-on-hover">Chiến dịch</span>
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium bounce-on-hover">Sản phẩm</span>
+                                <span class="px-3 py-1 bg-red-100 text-red-700 rounded-full text-sm font-medium bounce-on-hover">Thành công</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phần Mini Game quay số trúng thưởng -->
+    <section id="game" class="py-20 bg-gradient-to-r from-red-600 to-red-700 text-white relative overflow-hidden">
+        <!-- Animated background elements -->
+        <div class="absolute top-0 left-0 w-full h-full overflow-hidden">
+            <div class="absolute top-1/4 left-1/4 w-32 h-32 bg-white/5 rounded-full float-element"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-40 h-40 bg-white/5 rounded-full float-element" style="animation-delay: 1s;"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 slide-in-left">Mini Game Quay Số Trúng Thưởng</h2>
+                <p class="text-xl opacity-90 max-w-3xl mx-auto slide-in-right">Tham gia ngay để có cơ hội nhận những phần quà hấp dẫn từ chương trình!</p>
+            </div>
+            
+            <div class="grid md:grid-cols-2 gap-12 items-center">
+                <div class="text-center">
+                    <div class="mb-8">
+                        <div class="w-48 h-48 mx-auto bg-white/10 rounded-full flex items-center justify-center mb-6 border-4 border-white/30 shadow-2xl pulse-glow">
+                            <i class="fas fa-gift text-6xl spinning rotate-3d"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-4 gradient-text">Quay số may mắn</h3>
+                        <p class="text-lg opacity-90">Mỗi lượt quay là một cơ hội nhận quà từ chương trình. Hãy thử vận may của bạn!</p>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-center slide-in-left">
+                            <i class="fas fa-trophy text-yellow-400 text-xl mr-3 float-element"></i>
+                            <span class="text-lg">Phần quà tinh thần nho nhỏ dành cho 5  	  bạn may mắn nhất</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white/10 backdrop-blur-sm p-8 rounded-2xl shadow-xl shimmer-card">
+                    <h3 class="text-2xl font-bold mb-6 text-center gradient-text">Thông tin Mini Game</h3>
+                    
+                    <div class="space-y-6">
+                        <div class="slide-in-bottom">
+                            <h4 class="font-bold text-lg mb-2">📅 Thời gian đăng ký</h4>
+                            <p>Từ 26/12/2025 đến 9:30 ngày 27/12/2025</p>
+                        </div>
+                        
+                        <div class="slide-in-bottom" style="animation-delay: 0.2s;">
+                            <h4 class="font-bold text-lg mb-2">🎯 Cách thức tham gia</h4>
+                            <ol class="list-decimal pl-5 space-y-2">
+                                <li class="bounce-on-hover">Đăng ký tham gia chương trình ở mục Mini Game</li>
+                                                                <li class="bounce-on-hover">Nhận mã số tham dự</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="slide-in-bottom" style="animation-delay: 0.4s;">
+                            <h4 class="font-bold text-lg mb-2">🏆 Phần thưởng</h4>
+                            <p>5 giải thưởng giá trị sẽ được trao mỗi tuần trong suốt tháng diễn ra chương trình.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 text-center">
+                        <button id="join-game-btn" class="pulse-glow bg-white text-red-700 px-10 py-4 rounded-full font-bold hover:bg-red-50 transition transform hover:scale-105 duration-300 text-lg shadow-2xl bounce-on-hover">
+                            <i class="fas fa-play-circle mr-2"></i> Tham gia ngay
+                        </button>
+                        <p class="mt-4 text-sm opacity-80">*Áp dụng điều khoản và điều kiện</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Phần Nhận xét của khán giả -->
+    <section id="testimonials" class="py-20 bg-white">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 gradient-text slide-in-left">Nhận Xét Của Khán Giả</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto slide-in-right">Cùng lắng nghe những chia sẻ từ những người đã tham gia chương trình của chúng tôi</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Testimonial 1 -->
+                <div class="testimonial-card p-6 rounded-2xl shadow-lg stagger-item">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-amber-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4 float-element">MH</div>
+                        <div>
+                            <h4 class="font-bold text-lg">Minh Hương</h4>
+                            <p class="text-gray-500 text-sm">Sinh viên Truyền thông</p>
+                            <div class="flex text-amber-500 mt-1">
+                                <i class="fas fa-star bounce-on-hover"></i>
+                                <i class="fas fa-star bounce-on-hover" style="animation-delay: 0.1s;"></i>
+                                <i class="fas fa-star bounce-on-hover" style="animation-delay: 0.2s;"></i>
+                                <i class="fas fa-star bounce-on-hover" style="animation-delay: 0.3s;"></i>
+                                <i class="fas fa-star bounce-on-hover" style="animation-delay: 0.4s;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 italic">"Chương trình đã giúp tôi hiểu sâu hơn về văn hóa đại chúng và cách các xu hướng được hình thành. Phần nghiên cứu về nhân vật truyền thông rất thú vị!"</p>
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <p class="text-sm text-gray-500">Tham gia: Tháng 11/2024</p>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 2 -->
+                <div class="testimonial-card p-6 rounded-2xl shadow-lg stagger-item">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-amber-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4 float-element" style="animation-delay: 0.5s;">TK</div>
+                        <div>
+                            <h4 class="font-bold text-lg">Trung Kiên</h4>
+                            <p class="text-gray-500 text-sm">Content Creator</p>
+                            <div class="flex text-amber-500 mt-1">
+                                <i class="fas fa-star bounce-on-hover"></i>
+                                <i class="fas fa-star bounce-on-hover" style="animation-delay: 0.1s;"></i>
+                                <i class="fas fa-star bounce-on-hover" style="animation-delay: 0.2s;"></i>
+                                <i class="fas fa-star bounce-on-hover" style="animation-delay: 0.3s;"></i>
+                                <i class="fas fa-star-half-alt bounce-on-hover" style="animation-delay: 0.4s;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 italic">"Mini game quay số rất vui và hấp dẫn! Không chỉ học được kiến thức mà còn có cơ hội nhận quà. Tôi đã may mắn trúng một voucher từ chương trình."</p>
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <p class="text-sm text-gray-500">Tham gia: Tháng 10/2024</p>
+                    </div>
+                </div>
+                
+                <!-- Testimonial 3 -->
+                <div class="testimonial-card p-6 rounded-2xl shadow-lg stagger-item">
+                    <div class="flex items-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-br from-red-500 to-amber-500 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4 float-element" style="animation-delay: 1s;">LA</div>
+                        <div>
+                            <h4 class="font-bold text-lg">Lan Anh</h4>
+                            <p class="text-gray-500 text-sm">Nhà báo trẻ</p>
+                            <div class="flex text-amber-500 mt-1">
+                                <i class="fas fa-star bounce-on-hover"></i>
+                                <i class="fas fa-star bounce-on-hover" style="animation-delay: 0.1s;"></i>
+                                <i class="fas fa-star bounce-on-hover" style="animation-delay: 0.2s;"></i>
+                                <i class="fas fa-star bounce-on-hover" style="animation-delay: 0.3s;"></i>
+                                <i class="fas fa-star bounce-on-hover" style="animation-delay: 0.4s;"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-gray-700 italic">"Lộ trình 4 bước rất khoa học và dễ tiếp thu. Đặc biệt phần tìm hiểu thuật ngữ truyền thông đã giúp tôi nắm vững kiến thức chuyên môn hơn."</p>
+                    <div class="mt-4 pt-4 border-t border-gray-100">
+                        <p class="text-sm text-gray-500">Tham gia: Tháng 9/2024</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Thêm nút xem thêm nhận xét -->
+            <div class="text-center mt-12">
+                <button id="more-testimonials" class="border-2 border-red-600 text-red-600 px-8 py-3 rounded-full font-bold hover:bg-red-600 hover:text-white transition duration-300 bounce-on-hover pulse-glow">
+                    <i class="fas fa-comments mr-2"></i> Xem thêm nhận xét
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-white py-12 footer-pattern relative overflow-hidden">
+        <!-- Animated background -->
+        <div class="absolute top-0 left-0 w-full h-full">
+            <div class="absolute top-10 right-10 w-20 h-20 bg-white/5 rounded-full float-element"></div>
+            <div class="absolute bottom-10 left-10 w-24 h-24 bg-white/5 rounded-full float-element" style="animation-delay: 1s;"></div>
+        </div>
+        
+        <div class="max-w-7xl mx-auto px-4 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0 text-center md:text-left">
+                    <p class="text-xl md:text-2xl font-bold text-white drop-shadow slide-in-left">Cùng 25DPTA2 khơi nguồn tri thức</p>
+                </div>
+                
+                <div class="text-center">
+                    <h4 class="font-bold mb-4 text-white slide-in-bottom">Thông tin liên hệ</h4>
+                    <div class="flex justify-center space-x-6">
+                        <a href="#" class="social-icon w-12 h-12 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition transform hover:scale-110 duration-300 shadow-md bounce-on-hover">
+                            <i class="fab fa-facebook-f text-lg"></i>
+                        </a>
+                        <a href="#" class="social-icon w-12 h-12 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition transform hover:scale-110 duration-300 shadow-md bounce-on-hover" style="animation-delay: 0.2s;">
+                            <i class="fab fa-instagram text-lg"></i>
+                        </a>
+                        <a href="#" class="social-icon w-12 h-12 bg-white/20 rounded-full flex items-center justify-center hover:bg-white/30 transition transform hover:scale-110 duration-300 shadow-md bounce-on-hover" style="animation-delay: 0.4s;">
+                            <i class="fas fa-comment text-lg"></i>
+                        </a>
+                    </div>
+                    <p class="mt-4 text-sm text-white/80 slide-in-bottom" style="animation-delay: 0.6s;">Facebook | Instagram | Zalo</p>
+                </div>
+            </div>
+            
+            <div class="mt-10 pt-6 border-t border-white/20 text-center">
+                <p class="text-white/70 text-sm slide-in-left">© 2024 Dự án Công nghiệp Sáng tạo - Lớp 25DPTA2</p>
+                <p class="text-white/60 text-xs mt-1 slide-in-right">Khám phá văn hóa đại chúng qua lăng kính sáng tạo</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Simple script for mobile menu toggle
+        const btn = document.getElementById('mobile-menu-button');
+        btn.addEventListener('click', () => {
+            alert('Menu mobile đang được cập nhật...');
+        });
+        
+        // Add scroll effect to header
+        window.addEventListener('scroll', function() {
+            const nav = document.querySelector('nav');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-xl');
+                nav.classList.remove('shadow-lg');
+            } else {
+                nav.classList.remove('shadow-xl');
+                nav.classList.add('shadow-lg');
+            }
+        });
+        
+        // Xử lý nút Tham gia ngay cho mini game
+        const joinGameBtn = document.getElementById('join-game-btn');
+        joinGameBtn.addEventListener('click', function() {
+            // Hiệu ứng confetti
+            createConfetti();
+            
+            // Hiển thị thông báo
+            setTimeout(() => {
+                alert('🎉 Chào mừng bạn đến với Mini Game Quay Số Trúng Thưởng!\n\nĐể tham gia, vui lòng:\n1. Đăng ký thông tin tại form đăng ký\n2. Theo dõi fanpage của chúng tôi\n3. Chia sẻ bài viết về chương trình\n\nChúc bạn may mắn! 🍀');
+            }, 500);
+            
+            // Hiệu ứng nhấn nút
+            this.classList.add('scale-95');
+            setTimeout(() => {
+                this.classList.remove('scale-95');
+            }, 150);
+            
+            // Hiệu ứng giả lập quay số
+            const giftIcon = document.querySelector('.fa-gift');
+            giftIcon.classList.remove('spinning');
+            setTimeout(() => {
+                giftIcon.classList.add('spinning');
+            }, 10);
+        });
+        
+        // Smooth scrolling cho navigation
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Tạo confetti effect
+        function createConfetti() {
+            const colors = ['#dc2626', '#ea580c', '#fbbf24', '#ffffff', '#f87171'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.top = '-10px';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.width = Math.random() * 10 + 5 + 'px';
+                confetti.style.height = confetti.style.width;
+                confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+                
+                document.body.appendChild(confetti);
+                
+                // Animation
+                const animation = confetti.animate([
+                    { 
+                        transform: 'translateY(0) rotate(0deg)', 
+                        opacity: 1 
+                    },
+                    { 
+                        transform: `translateY(${window.innerHeight}px) rotate(${Math.random() * 360}deg)`, 
+                        opacity: 0 
+                    }
+                ], {
+                    duration: Math.random() * 3000 + 2000,
+                    easing: 'cubic-bezier(0.215, 0.610, 0.355, 1)'
+                });
+                
+                animation.onfinish = () => confetti.remove();
+            }
+        }
+        
+        // Tạo background particles
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            if (!container) return;
+            
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.width = Math.random() * 10 + 5 + 'px';
+                particle.style.height = particle.style.width;
+                particle.style.left = Math.random() * 100 + 'vw';
+                particle.style.top = Math.random() * 100 + 'vh';
+                particle.style.opacity = Math.random() * 0.3 + 0.1;
+                
+                container.appendChild(particle);
+                
+                // Animation
+                animateParticle(particle);
+            }
+        }
+        
+        function animateParticle(particle) {
+            const duration = Math.random() * 10000 + 5000;
+            const xMovement = Math.random() * 100 - 50;
+            const yMovement = Math.random() * 100 - 50;
+            
+            const animation = particle.animate([
+                { transform: 'translate(0, 0)' },
+                { transform: `translate(${xMovement}px, ${yMovement}px)` }
+            ], {
+                duration: duration,
+                direction: 'alternate',
+                iterations: Infinity,
+                easing: 'ease-in-out'
+            });
+        }
+        
+        // Xử lý nút xem thêm nhận xét
+        const moreTestimonialsBtn = document.getElementById('more-testimonials');
+        moreTestimonialsBtn.addEventListener('click', function() {
+            // Hiệu ứng
+            this.classList.add('scale-95');
+            setTimeout(() => {
+                this.classList.remove('scale-95');
+            }, 150);
+            
+            // Hiển thị thông báo
+            setTimeout(() => {
+                alert('📝 Tính năng "Xem thêm nhận xét" đang được phát triển!\n\nChúng tôi sẽ sớm cập nhật thêm những chia sẻ từ khán giả khác. Cảm ơn bạn đã quan tâm!');
+            }, 200);
+        });
+        
+        // Khởi tạo particles khi trang load
+        window.addEventListener('load', () => {
+            createParticles();
+            
+            // Trigger animations on scroll
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (entry.target.classList.contains('stagger-item')) {
+                            entry.target.style.animationPlayState = 'running';
+                        }
+                    }
+                });
+            }, observerOptions);
+            
+            // Quan sát các elements có animation
+            document.querySelectorAll('.stagger-item, .slide-in-left, .slide-in-right, .slide-in-bottom').forEach(el => {
+                observer.observe(el);
+            });
+            
+            // Interactive hover cho hero background
+            const heroSection = document.querySelector('.bg-multimedia');
+            const glitchTrigger = heroSection.querySelector('.absolute.inset-0');
+            
+            glitchTrigger.addEventListener('mouseenter', () => {
+                heroSection.style.animation = 'backgroundAnimation 20s ease-in-out infinite, glitch 0.3s ease-in-out';
+            });
+            
+            glitchTrigger.addEventListener('mouseleave', () => {
+                heroSection.style.animation = 'backgroundAnimation 20s ease-in-out infinite';
+            });
+        });
+    </script>
+</body>
+</html>
